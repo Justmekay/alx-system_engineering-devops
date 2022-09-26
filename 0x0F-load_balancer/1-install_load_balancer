@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# Install and configure HAProxy 1.6 on a new Ubuntu 16.04 server
+
+apt-get -y update
+apt-get -y install 'haproxy=1.6.*'
+
+cat >> /etc/haproxy/haproxy.cfg << EOF
+backend web-backend
+	balance roundrobin
+	mode http
+	server 26544-web-01 3.236.97.145 check
+	server 26544-web-02-44.210.19.169 check
+frontend web-frontend
+	bind *:80
+	mode http
+	default_backend web-backend
+EOF
+
+service haproxy restart
